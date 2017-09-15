@@ -20,6 +20,10 @@ public class NotificationUtil {
 
     private static final int INTENT = 1123;
 
+    private static final int INCREASE_INTENT = 12;
+
+    private static final int IGNORE_NOTIFICATION = 23;
+
 
     public static void popNotification(Context context) {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context)
@@ -32,6 +36,8 @@ public class NotificationUtil {
                         context.getString(R.string.body)))
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setContentIntent(contentIntent(context))
+                .addAction(increaseCount(context))
+                .addAction(ignoreNotification(context))
                 .setAutoCancel(true);
 
 
@@ -55,4 +61,44 @@ public class NotificationUtil {
         Bitmap largeIcon = BitmapFactory.decodeResource(res, R.drawable.ic_accessibility_white_24dp);
         return largeIcon;
     }
+
+    public static void clearNotification(Context context) {
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        manager.cancelAll();
+    }
+
+    /**
+     * two methods for setting up two actions in the notification
+     *
+     * @param context
+     * @return
+     */
+    private static NotificationCompat.Action increaseCount(Context context) {
+        Intent increaseIntent = new Intent(context, RemindService.class);
+        increaseIntent.setAction(RemindTask.COUNT_INCREASE);
+
+        PendingIntent pendingIntent = PendingIntent.getService(context, INCREASE_INTENT,
+                increaseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_accessibility_white_24dp,
+                "plus one", pendingIntent);
+
+        return action;
+    }
+
+    private static NotificationCompat.Action ignoreNotification(Context context) {
+        Intent ignoreIntent = new Intent(context, RemindService.class);
+        ignoreIntent.setAction(RemindTask.NOTIFICATION_CANCEL);
+
+        PendingIntent pendingIntent = PendingIntent.getService(context,IGNORE_NOTIFICATION,
+                ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_pan_tool_black_24dp,
+                "cancel", pendingIntent);
+
+        return action;
+
+    }
+
 }
