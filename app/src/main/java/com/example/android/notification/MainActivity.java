@@ -1,6 +1,9 @@
 package com.example.android.notification;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -18,9 +21,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private ImageButton imageButton;
 
-    private TextView numberView, notificationView;
+    private TextView numberView, notificationView, chargingView;
 
     private Toast mToast;
+
+    private ChargingBroadcastReceiver chargingBroadcastReceiver;
+
+    private IntentFilter intentFilter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         numberView = (TextView) findViewById(R.id.number_display);
 
         notificationView = (TextView) findViewById(R.id.display);
+
+        chargingView = (TextView) findViewById(R.id.charging_status);
+
 
         updateCount();
         updateNotification();
@@ -62,6 +73,33 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        //setting up broadcastReceiver
+        chargingBroadcastReceiver = new ChargingBroadcastReceiver();
+        intentFilter = new IntentFilter();
+
+        intentFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+        intentFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+
+
+    }
+
+    /**
+     * register BroadcastReceiver
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(chargingBroadcastReceiver, intentFilter);
+    }
+
+    /**
+     * unregister BroadcastReceiver
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(chargingBroadcastReceiver);
     }
 
     private void updateCount() {
@@ -90,5 +128,33 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onDestroy();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    private void isCharging(boolean isCharging) {
+        if (isCharging) {
+            chargingView.setText("Device is charging");
+        } else {
+            chargingView.setText("Device is not Charging");
+        }
+    }
+
+    /**
+     * the use of broadcastReceiver is to check whether device is charging, if it it, then set
+     * the textView to changring, if not, set the the text to not charging
+     * <p>
+     * <p>
+     * broadcastReceiver need to register and unregister in the correct lifecycle
+     */
+    private class ChargingBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            boolean check = action.equals(Intent.ACTION_POWER_CONNECTED);
+
+            isCharging(check);
+
+        }
     }
 }

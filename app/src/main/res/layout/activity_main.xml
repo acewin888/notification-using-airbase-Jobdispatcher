@@ -61,4 +61,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/imageButton"
         android:layout_marginBottom="8dp" />
 
+    <TextView
+        android:id="@+id/charging_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="is Device charging?"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/imageButton"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
