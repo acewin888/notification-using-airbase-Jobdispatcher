@@ -21,22 +21,30 @@ public class RemindJobService extends com.firebase.jobdispatcher.JobService {
 
 
     @Override
-    public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
+    public boolean onStartJob(final com.firebase.jobdispatcher.JobParameters job) {
 
         asyncTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
+                RemindTask.execute(RemindJobService.this, RemindTask.START_CHARGING);
 
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Object o) {
+                jobFinished(job, false);
+            }
         };
+
+        asyncTask.execute();
         return true;
     }
 
     @Override
     public boolean onStopJob(com.firebase.jobdispatcher.JobParameters job) {
 
-        if(asyncTask != null){
+        if (asyncTask != null) {
             asyncTask.cancel(true);
         }
         return true;

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         updateCount();
         updateNotification();
+        AutoRemind.autoRemind(this);
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
