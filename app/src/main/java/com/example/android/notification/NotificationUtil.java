@@ -62,6 +62,10 @@ public class NotificationUtil {
         return largeIcon;
     }
 
+    /**
+     * whenever user click notification actions, the notification cancels anyway
+     * @param context
+     */
     public static void clearNotification(Context context) {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -91,7 +95,7 @@ public class NotificationUtil {
         Intent ignoreIntent = new Intent(context, RemindService.class);
         ignoreIntent.setAction(RemindTask.NOTIFICATION_CANCEL);
 
-        PendingIntent pendingIntent = PendingIntent.getService(context,IGNORE_NOTIFICATION,
+        PendingIntent pendingIntent = PendingIntent.getService(context, IGNORE_NOTIFICATION,
                 ignoreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action action = new NotificationCompat.Action(R.drawable.ic_pan_tool_black_24dp,

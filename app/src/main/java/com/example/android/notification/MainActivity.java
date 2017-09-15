@@ -50,6 +50,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 intent.setAction(RemindTask.COUNT_INCREASE);
                 startService(intent);
 
+                Intent intent1 = new Intent(MainActivity.this, RemindService.class);
+                intent1.setAction(RemindTask.NOTIFICATION_INCREASE);
+                startService(intent1);
+
                 NotificationUtil.popNotification(MainActivity.this);
 
             }

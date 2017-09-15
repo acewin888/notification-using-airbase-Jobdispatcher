@@ -14,15 +14,23 @@ public class RemindTask {
 
     public static final String NOTIFICATION_CANCEL = "notification_cancel";
 
+    public static final String START_CHARGING = "start_charging";
+
 
     public static void execute(Context context, String action) {
         if (action.equals(COUNT_INCREASE)) {
             PreferenceUtil.incrementCount(context);
             NotificationUtil.clearNotification(context);
-        }  if (action.equals(NOTIFICATION_INCREASE)) {
+        }
+        if (action.equals(NOTIFICATION_INCREASE)) {
             PreferenceUtil.incrementNotificationCount(context);
-        } if (action.equals(NOTIFICATION_CANCEL)){
+        }
+        if (action.equals(NOTIFICATION_CANCEL)) {
             NotificationUtil.clearNotification(context);
+        }
+        if (action.equals(START_CHARGING)) {
+            NotificationUtil.popNotification(context);
+            PreferenceUtil.incrementNotificationCount(context);
         }
     }
 
