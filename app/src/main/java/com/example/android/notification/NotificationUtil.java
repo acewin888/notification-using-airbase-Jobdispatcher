@@ -50,6 +50,8 @@ public class NotificationUtil {
         manager.notify(110, notificationBuilder.build());
     }
 
+
+    // this will allow user to tap on notification and go to main page
     private static PendingIntent contentIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
 

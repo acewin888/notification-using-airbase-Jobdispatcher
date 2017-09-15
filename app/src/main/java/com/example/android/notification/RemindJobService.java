@@ -8,7 +8,7 @@ import android.os.AsyncTask;
  * Created by kevinsun on 9/15/17.
  */
 
-public class RemindJobService extends JobService {
+public class RemindJobService extends com.firebase.jobdispatcher.JobService {
     /**
      * becasue the Jobservice runs on the main thread, so it is necessary to use async task for
      * more heavy use case
@@ -19,29 +19,24 @@ public class RemindJobService extends JobService {
 
     private AsyncTask asyncTask;
 
+
     @Override
-    public boolean onStartJob(final JobParameters jobParameters) {
+    public boolean onStartJob(com.firebase.jobdispatcher.JobParameters job) {
 
         asyncTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
 
-                RemindTask.execute(RemindJobService.this, RemindTask.START_CHARGING);
                 return null;
             }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                jobFinished(jobParameters, false);
-            }
         };
-
         return true;
     }
 
     @Override
-    public boolean onStopJob(JobParameters jobParameters) {
-        if (asyncTask != null) {
+    public boolean onStopJob(com.firebase.jobdispatcher.JobParameters job) {
+
+        if(asyncTask != null){
             asyncTask.cancel(true);
         }
         return true;
